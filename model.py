@@ -31,7 +31,7 @@ class RNNModel(nn.Module):
                 raise ValueError('When using the tied flag, nhidden must be equal to emsize')
             self.decoder.weight = self.encoder.weight
 
-        self.init_weights()
+        #self.init_weights()
 
         self.rnn_type = rnn_type
         self.nhid = nhidden
@@ -41,11 +41,12 @@ class RNNModel(nn.Module):
     def forward(self, input, hidden):
 
         emb = self.drop(self.encoder(input))
-        output, hidden = self.rnn(emb, hidden)
+
+        output, hidden = self.rnn(emb)
         output = self.drop(output)
         decoded = self.decoder(output.view(output.size(0)*output.size(1), output.size(2)))
 
-        return decoded.view(output.size(0), output.size(1), decoded.size(1)), hidden
+        return decoded
 
 
 
